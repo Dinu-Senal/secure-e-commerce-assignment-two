@@ -15,6 +15,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles/index.css" />
     <link rel="stylesheet" type="text/css" href="styles/checkout.css" />
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
+    <script src="gpay-logic/index.js"></script>
 </head>
 
 <body>
@@ -118,7 +120,7 @@
                                     <img src="img/google-pay-logo.png" alt="E-BMX" style="width: 100%;">
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-custom mx-5">Select Google Pay</button>
+                                    <div id="google-pay-button" class="mx-5"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -133,8 +135,8 @@
                     </table>
                 </div>
             </div>
+
         </div>
-        
     </div>
 
     <!-- Footer -->
