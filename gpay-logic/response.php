@@ -26,7 +26,6 @@ if (!empty($_GET['item_number']) && !empty($_GET['tx'])
     <title>Payment Gateway</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Ensuring body and html take full height */
         html, body {
             height: 100%;
             margin: 0;
@@ -85,7 +84,7 @@ if (!empty($_GET['item_number']) && !empty($_GET['tx'])
             <?php if (!empty($txn_id)) { ?>
                 <h4 class="font-weight-bold mt-5">Payment Information</h4>
                 <p class="mt-4"><strong>Transaction ID:</strong> <?php echo htmlspecialchars($txn_id); ?></p>
-                <p><strong>Paid Amount:</strong> <?php echo htmlspecialchars($payment_gross); ?></p>
+                <p><strong>Paid Amount:</strong> <?php echo htmlspecialchars($payment_gross) . ' ' . htmlspecialchars($currency_code); ?></p>
                 <p><strong>Payment Status:</strong> <?php echo htmlspecialchars($payment_status); ?></p>
                 
 				<h4 class="font-weight-bold mt-4">Product Information</h4>
@@ -103,3 +102,4 @@ if (!empty($_GET['item_number']) && !empty($_GET['tx'])
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+ 

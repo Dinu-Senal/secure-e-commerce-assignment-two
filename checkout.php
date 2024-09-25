@@ -112,7 +112,7 @@
                                     <img src="img/stripe-logo.png" alt="E-BMX" style="width: 100%;">
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-custom mx-5">Select Stripe</button>
+                                    <button type="button" class="btn btn-custom mx-5">Pay with Stripe</button>
                                 </td>
                             </tr>
                             <tr>
@@ -122,13 +122,14 @@
                                 <td class="align-middle">
                                     <div id="google-pay-button" class="mx-5"></div>
                                 </td>
+                                <div id="response-message"></div>
                             </tr>
                             <tr>
                                 <td class="img-column">
                                     <img src="img/apple-pay.png" alt="E-BMX" style="width: 100%;">
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-custom mx-5">Select Apple Pay</button>
+                                    <button type="button" class="btn btn-custom mx-5">Pay with Apple Pay</button>
                                 </td>
                             </tr>
                         </tbody>

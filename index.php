@@ -1,6 +1,16 @@
 <?php
     // including configuration file
     include_once "php/config.php";
+
+    // initialise session
+    session_start();
+
+    // dummy data 
+    $dummy_data = [
+        ["itemName" => "Bronton", "price" => 185, "itemNumber" => "E1", "image" => "img/electric-bike-01.png"],
+        ["itemName" => "E-BMX", "price" => 315, "itemNumber" => "E2", "image" => "img/electric-bike-02.png"],
+        ["itemName" => "F-65", "price" => 700, "itemNumber" => "E1", "image" => "img/electric-bike-03.png"],
+    ]
 ?>
 
 <!DOCTYPE html>
@@ -54,30 +64,16 @@
         <!-- Cards Section -->
         <div class="container cards-container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="card-custom">
-                        <img src="img/electric-bike-01.png" alt="Product Icon">
-                        <h5>Bronton</h5>
-                        <p>Price: $185</p>
-                        <a href="checkout.php?product=Bronton&price=185" class="btn-custom">Buy</a>
+                <?php foreach ($dummy_data as $product): ?>
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <img src="<?php echo $product['image']; ?>" alt="<?php echo $product["itemName"]?>">
+                            <h5><?php echo $product["itemName"]; ?></h5>
+                            <p>Price: $<?php echo $product['price']; ?></p>
+                            <a href="checkout.php?product=Bronton&price=185" class="btn-custom">Buy</a>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card-custom">
-                        <img src="img/electric-bike-02.png" alt="Product Icon">
-                        <h5>E-BMX</h5>
-                        <p>Price: $315</p>
-                        <a href="checkout.php?product=E-BMX&price=315" class="btn-custom">Buy</a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card-custom">
-                        <img src="img/electric-bike-03.png" alt="Product Icon">
-                        <h5>F-65</h5>
-                        <p>Price: $700</p>
-                        <a href="checkout.php?product=F-65&price=700" class="btn-custom">Buy</a>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
