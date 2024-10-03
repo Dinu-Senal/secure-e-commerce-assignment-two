@@ -1,8 +1,62 @@
 <?php
     // including configuration file
     include_once "config.php";
-    // including data file
-    include_once "data.php";
+    
+    // initialise session
+    session_start();
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product']) && isset($_POST['price'])) {
+        $product = $_POST['product'];
+        $price = $_POST['price'];
+
+        // initializing the cart
+        if(!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        // checking if the product already exists
+        $product_found = false;
+        foreach($_SESSION['cart'] as &$item) {
+            if($item['product'] == $product) {
+                $product_found = true; 
+
+                
+                if ($_POST['action'] === 'increase') {
+                    $item['quantity'] += 1;
+                    $item['total_price'] = $item['quantity'] * $item['price'];
+                } elseif ($_POST['action'] === 'decrease') {
+                    $item['quantity'] -= 1;
+                    $item['total_price'] = $item['quantity'] * $item['price'];
+                    
+                    // removing item if quantity is zero
+                    if ($item['quantity'] <= 0) {
+                        $index = array_search($item, $_SESSION['cart']);
+                        unset($_SESSION['cart'][$index]);
+                        // resetting the array key
+                        $_SESSION['cart'] = array_values($_SESSION['cart']);
+                    }
+                }
+                break;
+            }
+        }
+
+        // if the product was not found, add it as a new product
+        if(!$product_found) {
+            $_SESSION['cart'][] = [
+                'product' => $product,
+                'price' => $price,
+                'quantity' => 1,
+                'total_price' => $price
+            ];
+        };
+
+        // redirecting to same page
+        header('Location: checkout.php');
+        exit();
+    }
+
+    // checking if cart is empty
+    $cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +74,7 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">Alice's Electronic Bike Shop</a>
@@ -31,7 +85,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Track Order</a>
+                        <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Login</a>
@@ -47,11 +101,11 @@
         </div>
     </nav>
 
-    <!-- Checkout Section -->
+    <!-- checkout Section -->
     <div class="container checkout">
-        <!-- Product Details -->
+        <!-- product Details -->
         <div class="row product-detail">
-            <!-- Shopping Cart Section -->
+            <!-- shopping cart section -->
             <div class="col-md-12">
                 <div class="card table-card">
                     <div class="card-header">
@@ -63,34 +117,73 @@
                                 <tr>
                                     <th>Image</th>
                                     <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><img src="img/electric-bike-01.png" alt="Bronton"></td>
-                                    <td>Bronton</td>
-                                    <td>High-end electric bike with powerful motor</td>
-                                    <td>185 AUD</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="img/electric-bike-02.png" alt="E-BMX"></td>
-                                    <td>E-BMX</td>
-                                    <td>Sturdy electric BMX bike for rugged use</td>
-                                    <td>315 AUD</td>
-                                </tr>
+                                <?php if(!empty($_SESSION['cart'])): ?>
+                                    <?php foreach($_SESSION['cart'] as $item): ?>
+                                        <tr>
+                                            <td><img src="img/<?php echo $item['product']; ?>.png" alt="<?php echo $item['product']; ?>"></td>
+                                            <td><?php echo $item['product']; ?></td>
+                                            <td>
+                                                <?php echo $item['quantity']; ?>
+                                                <!-- increasing quantity -->
+                                                <form action="checkout.php" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="action" value="increase">
+                                                    <input type="hidden" name="product" value="<?php echo $item['product']; ?>">
+                                                    <input type="hidden" name="price" value="<?php echo $item['price']; ?>">
+                                                    <button type="submit" class="btn btn-sm btn-dark">+</button>
+                                                </form>
+                                                <!-- decreasing quantity -->
+                                                <form action="checkout.php" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="action" value="decrease">
+                                                    <input type="hidden" name="product" value="<?php echo $item['product']; ?>">
+                                                    <input type="hidden" name="price" value="<?php echo $item['price']; ?>">
+                                                    <button type="submit" class="btn btn-sm btn-danger">-</button>
+                                                </form>
+                                            </td>
+                                            <td><?php echo number_format($item['total_price'], 2); ?> AUD</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4">No items in the cart.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
+
+                        <?php
+                            $total_price=0;
+                            foreach($cart_items as $item) {
+                                $total_price += $item['total_price'];
+                            }
+                            $_SESSION['payable'] = $total_price;
+                        ?>
                         <div class="d-flex justify-content-end mt-4">
-                            <h5 class="font-weight-bold mx-4">Total: 500 AUD</h5>
+                            <h5 class="font-weight-bold mx-4">Total: <?php echo isset($_SESSION['payable']) ? $_SESSION['payable'] : 0; ?> AUD</h5>
+                        </div>
+                        <?php echo $i["payable"] . PAYPAL_CURRENCY; ?>
+
+                        <?php
+                            if(isset($_GET['action']) && $_GET['action'] == 'clear') {
+                                // clearing the cart session
+                                unset($_SESSION['cart']); 
+                                // reloading the page
+                                header('Location: checkout.php');
+                            }
+                        ?>
+                        <div class="d-flex justify-content-start mt-4">
+                            <a href="checkout.php?action=clear" class="btn btn-danger">Remove All From Cart</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Payment Options -->
+        <!-- payment Options -->
         <div class="col-md-12">
             <div class="card table-card">
                 <div class="card-header">
@@ -104,7 +197,25 @@
                                     <img src="img/paypal-logo.png" alt="Bronton" style="width: 100%;">
                                 </td>
                                 <td class="align-middle">
-                                <a href="<?php echo $paypalURL; ?>" class="btn btn-custom">Pay with PayPal</a>
+                                    <form action="<?php echo PAYPAL_URL; ?>" method="POST" style="display:inline;">
+                                        <!-- Specify a Buy Now button. -->
+                                        <input type="hidden" name="cmd" value="_xclick" />
+
+                                        <!-- Identify your business so that you can collect the payments. -->
+                                        <input type="hidden" name="business" value="<?php echo PAYPAL_ID; ?>" />
+
+                                        <!-- Specify details about the item that buyers will purchase. part of this field will be used in ipn.php-->
+                                        <input type="hidden" name="item_name" value="New Order" />
+                                        <input type="hidden" name="item_number" value="212" />
+                                        <input type="hidden" name="amount" value="<?php echo isset($_SESSION['payable']) ? $_SESSION['payable'] : 0; ?>" />
+                                        <input type="hidden" name="currency_code" value="<?php echo PAYPAL_CURRENCY; ?>" />
+
+                                        <!-- Specify URLs -->
+                                        <input type="hidden" name="return" value="<?php echo PAYPAL_RETURN_URL; ?>">
+                                        <input type="hidden" name="notify_url" value="<?php echo PAYPAL_NOTIFY_URL; ?>">
+
+                                        <button type="submit" class="btn btn-sm btn-custom">Pay with PayPal</button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr>
@@ -140,7 +251,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- footer -->
     <div class="footer">
         <p>&copy; 2024 My Shop. All rights reserved.</p>
         <p>Our Location:<br>Swanston St, Melbourne,<br>VIC 3000, Australia</p>

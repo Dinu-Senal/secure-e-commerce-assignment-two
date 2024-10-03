@@ -7,9 +7,9 @@
 
     // dummy data 
     $dummy_data = [
-        ["itemName" => "Bronton", "price" => 185, "itemNumber" => "E1", "image" => "img/electric-bike-01.png"],
-        ["itemName" => "E-BMX", "price" => 315, "itemNumber" => "E2", "image" => "img/electric-bike-02.png"],
-        ["itemName" => "F-65", "price" => 700, "itemNumber" => "E1", "image" => "img/electric-bike-03.png"],
+        ["itemName" => "Bronton", "price" => 25, "itemNumber" => "E1", "image" => "img/Bronton.png"],
+        ["itemName" => "E-BMX", "price" => 50, "itemNumber" => "E2", "image" => "img/E-BMX.png"],
+        ["itemName" => "F-65", "price" => 75, "itemNumber" => "E1", "image" => "img/F-65.png"],
     ]
 ?>
 
@@ -36,7 +36,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Track Order</a>
+                        <a class="nav-link" href="checkout.php">Shopping Cart</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Login</a>
@@ -70,7 +70,12 @@
                             <img src="<?php echo $product['image']; ?>" alt="<?php echo $product["itemName"]?>">
                             <h5><?php echo $product["itemName"]; ?></h5>
                             <p>Price: $<?php echo $product['price']; ?></p>
-                            <a href="checkout.php?product=Bronton&price=185" class="btn-custom">Buy</a>
+                            <form action="checkout.php" method="POST">
+                                <input type="hidden" name="product" value="<?php echo $product["itemName"]; ?>" >
+                                <input type="hidden" name="price" value="<?php echo $product["price"]; ?>" >
+                                <input type="hidden" name="itemNumber" value="<?php echo $product["itemNumber"]; ?>" >
+                                <button type="submit" class="btn-custom">Buy</button>
+                            </form>
                         </div>
                     </div>
                 <?php endforeach; ?>
