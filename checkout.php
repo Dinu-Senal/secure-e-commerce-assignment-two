@@ -71,6 +71,7 @@
     <link rel="stylesheet" type="text/css" href="styles/checkout.css" />
     <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
     <script src="gpay-logic/index.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <body>
@@ -312,9 +313,65 @@
                                     <img src="img/stripe-logo.png" alt="E-BMX" style="width: 100%;">
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-custom mx-5">Pay with Stripe</button>
+                                    <form id="payment-form">
+                                        <div id="card-element"><!-- A Stripe Element will be inserted here. --></div>
+                                        <button id="submit-button">Pay with Stripe</button>
+                                    </form>
                                 </td>
                             </tr>
+
+                            <div id="payment-status"></div>
+
+                            <script type="text/javascript">
+                                var stripe = Stripe('pk_test_51Q5lc1Roz41EYmvzqAW9gQ0qNq82lJc4YC48IWVJNxASaOtrWkK1UR4pBmjmuLdCOqYIGKxNrz81C3n6YyakdzGh00xsMkSbWr');
+                                var elements = stripe.elements();
+                                var cardElement = elements.create('card');
+                                cardElement.mount('#card-element');
+
+                                // Create the card element, hiding the postal code field
+                                var cardElement = elements.create('card', {
+                                    hidePostalCode: true  // Disables the ZIP/postal code field
+                                });
+
+                                var form = document.getElementById('payment-form');
+                                var submitButton = document.getElementById('submit-button');
+                                
+                                form.addEventListener('submit', function (event) {
+                                    event.preventDefault();
+
+                                    stripe.createPaymentMethod('card', cardElement).then(function(result) {
+                                        if (result.error) {
+                                            // Display error to the user
+                                            document.getElementById('payment-status').textContent = result.error.message;
+                                        } else {
+                                            // Send the payment method ID to your server
+                                            fetch('./process_payment.php', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                body: JSON.stringify({
+                                                    paymentMethodId: result.paymentMethod.id,
+                                                    amount: totalPrice // Pass the total price from your session
+                                                }),
+                                            }).then(function(response) {
+                                                return response.json();
+                                            }).then(function(paymentResult) {
+                                                if (paymentResult.error) {
+                                                    alert("error")
+                                                    // Display error to the user
+                                                    document.getElementById('payment-status').textContent = paymentResult.error;
+                                                } else {
+                                                    // Payment was successful
+                                                    alert("dsdsd")
+                                                    window.location.href = "success-page.php";
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            </script>
+
                             <tr>
                                 <td class="img-column">
                                     <img src="img/google-pay-logo.png" alt="E-BMX" style="width: 100%;">
