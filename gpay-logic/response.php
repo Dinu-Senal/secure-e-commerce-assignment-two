@@ -93,7 +93,7 @@ if (!empty($_GET['item_number']) && !empty($_GET['tx'])
             <?php } else { ?>
                 <h1 class="error">Your Payment has Failed</h1>
             <?php } ?>
-            <a href="../index.php" class="btn btn-custom">Back to Products</a>
+            <a href="../clear_session.php" class="btn btn-custom">Back to Products</a>
         </div>
     </div>
 

@@ -92,7 +92,7 @@ function getGoogleTransactionInfo() {
             {
                 label: "Subtotal",
                 type: "SUBTOTAL",
-                price: "500.00",
+                price: totalPrice.toString(),
             },
             {
                 label: "Tax",
@@ -103,7 +103,7 @@ function getGoogleTransactionInfo() {
         countryCode: 'AU',
         currencyCode: "AUD",
         totalPriceStatus: "FINAL",
-        totalPrice: "500.00",
+        totalPrice: totalPrice.toString(),
         totalPriceLabel: "Total"
     };
 }
@@ -159,7 +159,7 @@ function processPayment(paymentData) {
             // Mocking transaction details
             const txn_id = '123456789'; // Replace with actual transaction ID
             const item_number = 'PROD001'; // Replace with actual product/item number
-            const payment_gross = '500.00'; // Replace with actual payment amount
+            const payment_gross = totalPrice.toString(); // Replace with actual payment amount
             const currency_code = 'AUD'; // Replace with actual currency code
             const payment_status = 'Completed'; // Replace with actual payment status
 

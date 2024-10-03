@@ -162,6 +162,11 @@
                             }
                             $_SESSION['payable'] = $total_price;
                         ?>
+                        <!-- pass total price as a JavaScript variable -->
+                        <script type="text/javascript">
+                            var totalPrice = <?php echo isset($_SESSION['payable']) ? $_SESSION['payable'] : 0; ?>;
+                        </script>
+
                         <div class="d-flex justify-content-end mt-4">
                             <h5 class="font-weight-bold mx-4">Total: <?php echo isset($_SESSION['payable']) ? $_SESSION['payable'] : 0; ?> AUD</h5>
                         </div>
@@ -182,8 +187,92 @@
                 </div>
             </div>
         </div>
+
+        <!-- billing information -->
+        <div class="col-md-12">
+            <div class="card table-card">
+                <div class="card-header">
+                    Billing Information
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="firstName" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="First name">
+                            </div>
+                            <div class="col">
+                                <label for="lastName" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Last name">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text">@</span>
+                                <input type="text" class="form-control" id="username" placeholder="Username">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email (Optional)</label>
+                            <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" placeholder="1234 Main St">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address2" class="form-label">Address 2 (Optional)</label>
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="country" class="form-label">Country</label>
+                                <select class="form-select" id="country">
+                                    <option selected>Choose...</option>
+                                    <option value="1">Australia</option>
+                                    <option value="2">United States</option>
+                                    <option value="3">Canada</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="state" class="form-label">State</label>
+                                <select class="form-select" id="state">
+                                    <option selected>Choose...</option>
+                                    <option value="1">Victoria</option>
+                                    <option value="2">New South Wales</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="zip" class="form-label">Zip</label>
+                                <input type="text" class="form-control" id="zip" placeholder="Zip">
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="sameAddress">
+                            <label class="form-check-label" for="sameAddress">
+                                Shipping address is the same as my billing address
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="saveInfo">
+                            <label class="form-check-label" for="saveInfo">
+                                Save this information for next time
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
-        <!-- payment Options -->
+        <!-- payment options -->
         <div class="col-md-12">
             <div class="card table-card">
                 <div class="card-header">
@@ -247,7 +336,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 
