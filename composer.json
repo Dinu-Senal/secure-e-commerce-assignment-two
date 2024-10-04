@@ -1,5 +1,6 @@
 {
     "require": {
-        "stripe/stripe-php": "^16.1"
+        "stripe/stripe-php": "^16.1",
+        "adyen/php-api-library": "^20.4"
     }
 }
