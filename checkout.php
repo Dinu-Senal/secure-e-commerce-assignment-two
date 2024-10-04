@@ -311,9 +311,14 @@
                                 <td class="img-column">
                                     <img src="img/stripe-logo.png" alt="E-BMX" style="width: 100%;">
                                 </td>
+                                
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-custom mx-5">Pay with Stripe</button>
+                                    <!-- Form to submit to Stripe checkout -->
+                                    <form method="post" action="./stripe-logic/stripe-checkout.php">
+                                        <button type="submit" class="btn btn-custom mx-5">Pay with Stripe</button>
+                                    </form>
                                 </td>
+
                             </tr>
                             <tr>
                                 <td class="img-column">
